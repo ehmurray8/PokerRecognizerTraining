@@ -8,7 +8,7 @@ from parameters import COREML_MODEL_NAME, OUTPUT_LOCATION, TRAIN_TEST_SPLIT
 
 
 # Defines the actions the program should take
-SAVE_DATA = False
+SAVE_DATA = True
 EXPORT_MODEL = True
 
 

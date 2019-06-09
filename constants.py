@@ -1,6 +1,6 @@
 # Names of the input and output files
 SFRAME_NAME = "cards.sframe"
-TRAINING_DATA_NAME = "TrainingDataSubset1"
+TRAINING_DATA_NAME = "TrainingDataSubset"
 MODEL_NAME = "cards.model"
 
 
