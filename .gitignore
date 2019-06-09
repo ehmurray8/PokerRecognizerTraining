@@ -8,6 +8,7 @@
 TestingData/
 TrainingData/
 TrainingData*/
+*.zip
 
 # Maintainence Modules
 copy_files.py
