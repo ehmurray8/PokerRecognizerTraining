@@ -1,10 +1,12 @@
 import turicreate
+
 from shutil import copy2
 import os
 import re
+import atexit
 
 from constants import *
-from parameters import COREML_MODEL_NAME, OUTPUT_LOCATION, TRAIN_TEST_SPLIT
+from parameters import COREML_MODEL_NAME, OUTPUT_LOCATION, TRAIN_TEST_SPLIT, NUMBER_OF_GPUS, CACHE_DIRECTORY
 
 
 # Defines the actions the program should take
@@ -46,22 +48,33 @@ def create_and_save_model(data: turicreate.SFrame):
     :param data: The SFrame that was created using the training data
     """
     train_data, test_data = data.random_split(TRAIN_TEST_SPLIT)
-    model = turicreate.one_shot_object_detector.create(train_data, target=CARD_NAME_LABEL)
+    model = turicreate.one_shot_object_detector.create(train_data, target=CARD_NAME_LABEL, batch_size=32)
     _ = model.predict(test_data)
+    print("Ran model.predict")
     metrics = model.evaluate(test_data)
     print(metrics[ACCURACY_LABEL])
     model.save(MODEL_NAME)
     model.export_coreml(COREML_MODEL_NAME)
 
 
+@atexit.register
+def exit_handler():
+    print("Killed")
+
+
 if __name__ == "__main__":
-    turicreate.config.set_num_gpus(0)
+    turicreate.config.set_num_gpus(NUMBER_OF_GPUS)
+
+    if CACHE_DIRECTORY != "":
+        turicreate.config.set_runtime_config("TURI_CACHE_FILE_LOCATIONS",
+                                             "/home/emmet/source_code/PokerRecognizerTraining/cache")
 
     # Uncomment when you need to create the SFrame
     if SAVE_DATA:
         save_data()
 
     DATA = load_data()
+    print("Loaded data")
     create_and_save_model(DATA)
 
     # Copy the data model into the output location to be used in an app

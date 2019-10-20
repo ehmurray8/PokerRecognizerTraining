@@ -3,12 +3,14 @@
 *.model/
 *.sframe/
 *mlmodel
+cache/
 
 # Input data 
 TestingData/
 TrainingData/
 TrainingData*/
 *.zip
+.tar.gz
 
 # Maintainence Modules
 copy_files.py
